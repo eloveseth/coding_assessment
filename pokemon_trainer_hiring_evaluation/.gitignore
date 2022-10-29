@@ -74,8 +74,9 @@ target/
 # Spyder
 .spyproject/
 
-# Jupyter NB Checkpoints
+# Jupyter NB
 .ipynb_checkpoints/
+notebooks/
 
 # Mac OS-specific storage files
 .DS_Store
@@ -89,9 +90,4 @@ target/
 
 # pytest cache
 .pytest_cache/
-
-# Hydra logs
-outputs
-
-# folders
-notebooks/
+/notebooks/
