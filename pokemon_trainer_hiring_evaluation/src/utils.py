@@ -4,19 +4,32 @@ from typing import List
 import re
 
 
-def read_csv_to_dataframe(fpath: str) -> pd.Dataframe:
+def read_csv_to_df(fpath: str) -> pd.DataFrame:
     """
     Reads csv to dataframe.
+
     Args:
         fpath: filepath for csv to read
+
     Returns:
         df: dataframe of csv
     """
-    with open(fpath, 'r') as csvfile:
-        csv_file_reader = csv.reader(csvfile, delimiter=',')
-        df = pd.Dataframe([row for row in csv_file_reader])
+    df = pd.read_csv(fpath)
 
     return df
+
+
+def write_df_to_csv(df: pd.DataFrame, fpath: str):
+    """
+    Reads csv to dataframe.
+
+    Args:
+        df: dataframe to save
+        fpath: filepath to save csv
+
+    Returns:
+    """
+    df.to_csv(fpath)
 
 
 def extract_pay_type(pay_rate: str) -> str:
@@ -31,5 +44,7 @@ def extract_pay_amt(pay_rate: str) -> str:
     return pay_amt
 
 
-def convert_to_numeric(df: pd.DataFrame, cols: List[str]) -> pd. Dataframe:
+def convert_to_numeric(df: pd.DataFrame, cols: List[str]) -> pd.DataFrame:
     df = pd.to_numeric(df[cols], errors='coerce')
+
+    return df

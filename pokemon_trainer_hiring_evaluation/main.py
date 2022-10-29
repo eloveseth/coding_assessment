@@ -1,4 +1,8 @@
-def run_model():
+from src.process import process_data
+from src.train_model import train_model
+
+
+def main():
     """
     Main method to run model.
 
@@ -6,9 +10,11 @@ def run_model():
 
     Returns:
     """
+    df = process_data()
+    train_model(df)
 
 
 
 
 if __name__ == '__main__':
-    run_model()
+    main()
