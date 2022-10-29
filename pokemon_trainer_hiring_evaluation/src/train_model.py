@@ -1,16 +1,15 @@
-import numpy as np
-import pandas as pd
-from typing import Tuple
-from sklearn.model_selection import GridSearchCV, train_test_split
 from imblearn.pipeline import Pipeline
 from imblearn.over_sampling import SMOTE
-from sklearn.preprocessing import MinMaxScaler
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.impute import SimpleImputer
 import xgboost as xgb
 
+
 PARAM_GRID = [{
     'model__max_depth': [4, 6],
-    # 'model__min_child_weight': [4, 6],
+    'model__min_child_weight': [4, 6],
 }]
 
 
@@ -39,13 +38,22 @@ def train_model(df: pd.DataFrame):
     y_pred = clf.predict(x_test)
     y_pred_proba = clf.predict_proba(x_test)[:, 1]
 
-    return y_pred, y_pred_proba
+    return y_test, y_pred, y_pred_proba, clf, x_train
 
 
 def create_pipeline():
+    """Create pipeline for model.
+
+    Args:
+        y_pred: predictions
+        y_true: ground truth values
+
+    Returns:
+        grad:
+        hess:
+    """
     imp = SimpleImputer(missing_values=np.nan, strategy='mean')
     smote = SMOTE(random_state=500, sampling_strategy=.78)
-    scaler = MinMaxScaler()
     model = xgb.XGBClassifier(
         objective=custom_se
     )
@@ -53,7 +61,6 @@ def create_pipeline():
     clf = Pipeline([
         ('imputer', imp),
         ('smote', smote),
-        ('standardize', scaler),
         ('model', model)
     ])
 
@@ -61,7 +68,17 @@ def create_pipeline():
 
 
 def create_train_test_split(df: pd.DataFrame):
-    # split data into training and test
+    """Create train test split.
+
+    Args:
+        df:
+
+    Returns:
+        x_train:
+        x_test:
+        y_train:
+        y_test
+    """
     x = df.drop("hired", axis=1).values
     y = df.hired.values
 

@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 
 from .utils import extract_pay_type, extract_pay_amt, read_csv_to_df, write_df_to_csv
@@ -39,7 +40,6 @@ def process_data() -> pd.DataFrame:
     trainer_processed = trainer_processed.join(pd.get_dummies(trainer['LastPerformaceRating'], prefix='certified_'))
 
     write_df_to_csv(trainer_processed, './data/processed/trainer_processed.csv')
-    import pdb; pdb.set_trace()
 
     return trainer_processed
 
@@ -75,19 +75,31 @@ def clean_trainer_pay_rates(trainer: pd.DataFrame) -> pd.DataFrame:
 
 
 def convert_trainer_pay_rates(df: pd.DataFrame) -> pd.DataFrame():
+    """Helper function for clean_trainer_pay_rates. Convert trainer pay rates to salary equivalent.
+
+    Args:
+        df
+
+    Returns:
+        converted_df
+    """
     for _, value in PAY_RATE.items():
-        if 'PER_HOUR' in df[value[0]]:
-            df[value[1]] = df[value[1]] * 52 * 40
-        elif 'PER_WEEK' in df[value[0]]:
-            df[value[1]] = df[value[1]] * 52
-        elif 'PER_MONTH' in df[value[0]]:
-            df[value[1]] = df[value[1]] * 12
-        else:
-            df[value[1]]
+        df[value[1]] = np.where(df[value[0]] == 'PER_HOUR',
+                                df[value[1]] * 52 * 40,
+                                df[value[1]])
+        df[value[1]] = np.where(df[value[0]] == 'PER_DAY',
+                                df[value[1]] * 52 * 5,
+                                df[value[1]])
+        df[value[1]] = np.where(df[value[0]] == 'PER_WEEK',
+                                df[value[1]] * 52,
+                                df[value[1]])
+        df[value[1]] = np.where(df[value[0]] == 'PER_MONTH',
+                                df[value[1]] * 12,
+                                df[value[1]])
 
-    converted_rates = df.drop(df.iloc[:, 0:4], axis=1)
+    converted_df = df.drop(df.iloc[:, 0:4], axis=1)
 
-    return converted_rates
+    return converted_df
 
 
 if __name__ == '__main__':
