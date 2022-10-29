@@ -10,7 +10,6 @@
 │   ├── processed                   # data after processing
 │   ├── raw                         # raw data
 ├── .gitignore                      # ignore files that cannot commit to Git
-├── notebooks                       # store notebooks
 ├── pyproject.toml                  # dependencies for poetry
 ├── README.md                       # project description
 ├── src                             # store source code
