@@ -14,6 +14,8 @@ FEATURES = [
     'hired',
     'WorkingForJobAppliedFor',
     'GymCertified',
+    'TotalYearsOfExp',
+    'WorkedInThisRegion',
 ]
 
 
@@ -35,9 +37,9 @@ def process_data() -> pd.DataFrame:
     trainer_pay_rates = clean_trainer_pay_rates(trainer)
     trainer_processed = trainer_processed.join(trainer_pay_rates)
 
-    trainer_processed = trainer_processed.join(pd.get_dummies(trainer['GymBadge4Pokemon'], prefix='gym_badge_'))
-    trainer_processed = trainer_processed.join(pd.get_dummies(trainer['CurrentlyTrainingPokemon'], prefix='current_'))
-    trainer_processed = trainer_processed.join(pd.get_dummies(trainer['LastPerformaceRating'], prefix='certified_'))
+    trainer_processed = trainer_processed.join(pd.get_dummies(trainer['PokemonTrainerClass'], prefix='class_'))
+    trainer_processed = trainer_processed.join(pd.get_dummies(trainer['PositionForTrainingPokemon'], prefix='train_'))
+    trainer_processed = trainer_processed.join(pd.get_dummies(trainer['PokemonWorldRegion'], prefix='region_'))
 
     write_df_to_csv(trainer_processed, './data/processed/trainer_processed.csv')
 
